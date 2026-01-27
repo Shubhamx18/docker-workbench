@@ -40,3 +40,19 @@ Before Docker, teams faced:
 
 Docker packages everything the app needs:
 
+## 🎯 How Docker Solves This
+
+Docker packages everything the application needs into one container:
+
+```
+Application Code
++ Dependencies
++ Libraries
++ Runtime
++ System Tools
+= Docker Container
+```
+
+This ensures the app runs the same way everywhere.
+
+
