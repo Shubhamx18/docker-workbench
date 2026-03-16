@@ -1,4 +1,4 @@
-<h1 align="center">🌐 Docker Networking</h1>
+<h1 align="center">Docker Networking</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Topic-Docker_Networking-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
@@ -8,19 +8,19 @@
 
 ---
 
-## ❓ What is Docker Networking?
+## What is Docker Networking?
 
 Docker Networking is the built-in system that allows containers to communicate with:
 
-✔ Other containers on the same host
-✔ The host machine
-✔ External internet services
+- Other containers on the same host
+- The host machine
+- External internet services
 
 When Docker starts a container, it automatically connects it to a virtual network so it can send and receive data.
 
 ---
 
-## 🎯 Why Networking is Essential
+## Why Networking is Essential
 
 Real-world applications are multi-service:
 
@@ -41,16 +41,16 @@ Without Docker networking, these containers cannot find or talk to each other.
 
 ---
 
-## 🧠 How Docker Networking Works
+## How Docker Networking Works
 
 Each container on a Docker network receives:
-- A **unique IP address** on the virtual network
-- A **virtual network interface**
-- Access to **Docker's internal DNS** for name resolution
+- A unique IP address on the virtual network
+- A virtual network interface
+- Access to Docker's internal DNS for name resolution
 
 ---
 
-## 🚦 Network Driver Types
+## Network Driver Types
 
 | Driver | Purpose | Use Case |
 |--------|---------|----------|
@@ -62,7 +62,7 @@ Each container on a Docker network receives:
 
 ---
 
-## 🏗 Bridge Network (Default)
+## Bridge Network (Default)
 
 Docker automatically creates a default network called `bridge`:
 
@@ -74,11 +74,11 @@ docker network ls
 docker run -d nginx
 ```
 
-> ⚠️ Containers on the **default** bridge network **cannot resolve each other by name** — always create a custom network instead.
+> Containers on the default bridge network cannot resolve each other by name — always create a custom network instead.
 
 ---
 
-## 🌟 Custom Bridge Network (Recommended)
+## Custom Bridge Network (Recommended)
 
 Creating a named custom network is DevOps best practice:
 
@@ -94,11 +94,11 @@ docker run -d --name database --network mynetwork mysql
 # "frontend" can now reach "backend" and "database" by name
 ```
 
-Docker provides **automatic DNS resolution** — container names are used as hostnames directly.
+Docker provides automatic DNS resolution — container names are used as hostnames directly.
 
 ---
 
-## 🌍 Host Network
+## Host Network
 
 The container shares the host machine's full network stack:
 
@@ -106,13 +106,13 @@ The container shares the host machine's full network stack:
 docker run --network host nginx
 ```
 
-✔ No port mapping required
-✔ Best performance for network-heavy apps
-❌ No network isolation from the host
+- No port mapping required
+- Best performance for network-heavy apps
+- No network isolation from the host
 
 ---
 
-## 🚫 None Network
+## None Network
 
 Completely disables all networking for a container:
 
@@ -124,9 +124,9 @@ Used for security isolation or standalone batch processing.
 
 ---
 
-## 🌐 Overlay Network (Docker Swarm)
+## Overlay Network (Docker Swarm)
 
-Enables communication between containers running across **multiple Docker hosts**:
+Enables communication between containers running across multiple Docker hosts:
 
 ```bash
 docker network create -d overlay cluster-network
@@ -136,7 +136,7 @@ Required for Docker Swarm multi-host deployments.
 
 ---
 
-## 🔌 Port Mapping
+## Port Mapping
 
 Expose a container's port to the host machine:
 
@@ -150,11 +150,11 @@ docker run -d -p 8080:80 nginx
 | 5432 | 5432 | PostgreSQL on host port 5432 |
 | 3000 | 3000 | Node.js app on port 3000 |
 
-> Internal container-to-container traffic does **not** need port mapping.
+> Internal container-to-container traffic does not need port mapping.
 
 ---
 
-## 🔎 Network Management Commands
+## Network Management Commands
 
 ```bash
 # List all networks
@@ -163,7 +163,7 @@ docker network ls
 # Create a custom network
 docker network create mynetwork
 
-# Inspect a network (see connected containers, IPs)
+# Inspect a network (see connected containers and IPs)
 docker network inspect mynetwork
 
 # Connect a running container to a network
@@ -181,12 +181,12 @@ docker network prune
 
 ---
 
-## 🧠 Docker Internal DNS
+## Docker Internal DNS
 
-Inside a custom network, Docker acts as an internal DNS server — **container names resolve to their IP addresses automatically**.
+Inside a custom network, Docker acts as an internal DNS server — container names resolve to their IP addresses automatically.
 
 ```bash
-# You can ping containers by name
+# Ping and reach containers by name
 docker exec frontend ping backend
 docker exec frontend curl http://backend:5000/api
 ```
@@ -195,16 +195,10 @@ No need to hardcode IPs — they change on every restart anyway.
 
 ---
 
-## 🎯 Networking Best Practices
+## Networking Best Practices
 
-✔ Always use **custom bridge networks** — never rely on the default
-✔ Use **container names** as hostnames — never hardcode IPs
-✔ Only expose ports that need **external** access
-✔ Use **separate networks** to isolate frontend from database
-✔ Avoid `--network host` unless you have a specific performance need
-
----
-
-<p align="center">
-  ✅ Topic Complete — You now understand all Docker network drivers, port mapping, and DNS resolution
-</p>
+- Always use custom bridge networks — never rely on the default
+- Use container names as hostnames — never hardcode IPs
+- Only expose ports that need external access
+- Use separate networks to isolate frontend from database
+- Avoid `--network host` unless you have a specific performance need
