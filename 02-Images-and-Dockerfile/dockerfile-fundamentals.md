@@ -1,4 +1,4 @@
-<h1 align="center">📝 Dockerfile Fundamentals</h1>
+<h1 align="center">Dockerfile Fundamentals</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Topic-Dockerfile-blue?style=for-the-badge&logo=docker&logoColor=white"/>
@@ -8,7 +8,7 @@
 
 ---
 
-## 📝 What is a Dockerfile?
+## What is a Dockerfile?
 
 A **Dockerfile** is a plain text file containing sequential instructions that Docker executes to automatically build an image.
 
@@ -18,55 +18,55 @@ It defines:
 - Dependencies to install
 - Commands to run the application
 
-> Think of it as a **recipe** — follow the steps and you always get the same result 🍳
+> Think of it as a recipe — follow the steps and you always get the same result.
 
 ---
 
-## 📦 Why Dockerfiles Matter
+## Why Dockerfiles Matter
 
 | Without Dockerfile | With Dockerfile |
 |--------------------|-----------------|
-| ❌ Manual environment setup every time | ✔ Fully automated image creation |
-| ❌ Inconsistent environments across machines | ✔ Identical environment every single time |
-| ❌ No way to version your environment | ✔ Version control your entire app setup |
-| ❌ Onboarding new devs is slow | ✔ One command to reproduce the full environment |
+| Manual environment setup every time | Fully automated image creation |
+| Inconsistent environments across machines | Identical environment every single time |
+| No way to version your environment | Version control your entire app setup |
+| Onboarding new devs is slow | One command to reproduce the full environment |
 
 ---
 
-## 🧱 Complete Dockerfile Example
+## Complete Dockerfile Example
 
 ```dockerfile
-# ── Base Image ────────────────────────────────
+# Base Image
 FROM python:3.10-slim
 
-# ── Metadata ──────────────────────────────────
+# Metadata
 LABEL maintainer="shubham@example.com"
 LABEL version="1.0"
 
-# ── Environment Variables ─────────────────────
+# Environment Variables
 ENV APP_ENV=production
 ENV PORT=5000
 
-# ── Working Directory ─────────────────────────
+# Working Directory
 WORKDIR /app
 
-# ── Copy & Install Dependencies ───────────────
+# Copy & Install Dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ── Copy Application Code ─────────────────────
+# Copy Application Code
 COPY . .
 
-# ── Declare Port ─────────────────────────────
+# Declare Port
 EXPOSE 5000
 
-# ── Startup Command ───────────────────────────
+# Startup Command
 CMD ["python", "app.py"]
 ```
 
 ---
 
-## 🔍 Dockerfile Instruction Reference
+## Dockerfile Instruction Reference
 
 | Instruction | Purpose | Example |
 |-------------|---------|---------|
@@ -86,12 +86,12 @@ CMD ["python", "app.py"]
 
 ---
 
-## 🧠 CMD vs ENTRYPOINT
+## CMD vs ENTRYPOINT
 
 | | CMD | ENTRYPOINT |
 |-|-----|------------|
 | Purpose | Default command | Fixed executable |
-| Can be overridden? | ✅ Yes, at runtime | ❌ No (only arguments change) |
+| Can be overridden? | Yes, at runtime | No (only arguments change) |
 | Best for | Flexible default commands | Wrapping a specific tool |
 
 ```dockerfile
@@ -105,7 +105,7 @@ CMD ["app.py"]       # default arg — run as: python app.py
 
 ---
 
-## 🏗 Build Commands
+## Build Commands
 
 ```bash
 # Build image from Dockerfile in current directory
@@ -123,12 +123,12 @@ docker history my-app:v1
 
 ---
 
-## 🚀 Multi-Stage Builds (Best Practice)
+## Multi-Stage Builds (Best Practice)
 
 Multi-stage builds produce smaller, leaner production images by separating the build environment from the runtime environment.
 
 ```dockerfile
-# ── Stage 1: Build ────────────────────────────
+# Stage 1: Build
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
@@ -136,7 +136,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# ── Stage 2: Production ───────────────────────
+# Stage 2: Production
 FROM node:18-alpine
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
@@ -145,25 +145,25 @@ EXPOSE 3000
 CMD ["node", "dist/server.js"]
 ```
 
-> ✅ The final image contains only the output — not the full build tools — keeping it small and secure.
+> The final image contains only the output — not the full build tools — keeping it small and secure.
 
 ---
 
-## 🔒 Dockerfile Security Best Practices
+## Dockerfile Security Best Practices
 
 ```dockerfile
-# ✅ Use specific version tags — never just "latest"
+# Use specific version tags — never just "latest"
 FROM python:3.10-slim        # Good
-FROM python:latest           # ❌ Unpredictable
+FROM python:latest           # Unpredictable
 
-# ✅ Run as non-root user
+# Run as non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
-# ✅ Install only what you need
+# Install only what you need
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ✅ Copy dependency files before source code (layer caching)
+# Copy dependency files before source code (layer caching)
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .                     # Source changes don't bust the cache above
@@ -171,15 +171,9 @@ COPY . .                     # Source changes don't bust the cache above
 
 ---
 
-## 🎯 Why Dockerfiles Matter in DevOps
+## Why Dockerfiles Matter in DevOps
 
-✔ Fully automated, repeatable image builds
-✔ Environment-as-code — stored in version control alongside the app
-✔ Foundation for every CI/CD pipeline
-✔ Enables rollback by rebuilding any previous version
-
----
-
-<p align="center">
-  ✅ Topic Complete — You now understand how to write, build, and optimize Dockerfiles
-</p>
+- Fully automated, repeatable image builds
+- Environment-as-code — stored in version control alongside the app
+- Foundation for every CI/CD pipeline
+- Enables rollback by rebuilding any previous version
