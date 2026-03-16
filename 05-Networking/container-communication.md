@@ -1,4 +1,4 @@
-<h1 align="center">🔗 Container Communication</h1>
+<h1 align="center">Container Communication</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Topic-Container_Communication-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
@@ -8,19 +8,19 @@
 
 ---
 
-## 🌐 Overview
+## Overview
 
 In real applications, containers don't work in isolation — they need to communicate:
 
 | Communication Type | Example |
 |--------------------|---------|
-| Container → Internet | Calling external REST APIs |
-| Container → Host Machine | Connecting to a local database |
-| Container → Container | Backend API talking to a database container |
+| Container to Internet | Calling external REST APIs |
+| Container to Host Machine | Connecting to a local database |
+| Container to Container | Backend API talking to a database container |
 
 ---
 
-# 1️⃣ Container → Internet
+# 1. Container to Internet
 
 Containers have internet access by default through the host's network.
 
@@ -69,11 +69,11 @@ Internet (External API)
 Container App
 ```
 
-✔ No extra configuration needed — internet access works out of the box.
+No extra configuration needed — internet access works out of the box.
 
 ---
 
-# 2️⃣ Container → Host Machine
+# 2. Container to Host Machine
 
 To connect to a service running on your local machine (e.g. a local MySQL), Docker provides a special hostname:
 
@@ -98,12 +98,12 @@ conn = mysql.connector.connect(
 print("Connected to local MySQL!")
 ```
 
-> ✅ Works on macOS and Windows Docker Desktop.
-> 🐧 On Linux, use `--add-host=host.docker.internal:host-gateway` in your `docker run` command.
+> Works on macOS and Windows Docker Desktop.
+> On Linux, use `--add-host=host.docker.internal:host-gateway` in your `docker run` command.
 
 ---
 
-# 3️⃣ Container ↔ Container Communication
+# 3. Container to Container Communication
 
 The most common pattern in microservices. Containers communicate over a **shared Docker network** using container names as hostnames.
 
@@ -183,18 +183,18 @@ Docker's built-in DNS resolves `mysql-db` to the correct container IP automatica
 
 ---
 
-## ⚠️ Rules for Container Communication
+## Rules for Container Communication
 
 | Rule | Why It Matters |
 |------|----------------|
 | Both containers must be on the same network | Otherwise DNS resolution fails entirely |
 | Always use container names, never IPs | Container IPs change on every restart |
-| Only expose ports needed for external access | Internal traffic doesn't need `-p` mapping |
+| Only expose ports needed for external access | Internal traffic does not need `-p` mapping |
 | Use environment variables for credentials | Avoid hardcoding secrets in source code |
 
 ---
 
-## 🎯 Real Production Architecture
+## Real Production Architecture
 
 ```
 Browser / Client
@@ -213,9 +213,3 @@ External API Service  (outbound internet)
 ```
 
 Only the **frontend** port is exposed to the outside world — everything else communicates internally.
-
----
-
-<p align="center">
-  ✅ Topic Complete — You now understand all three types of Docker container communication
-</p>
