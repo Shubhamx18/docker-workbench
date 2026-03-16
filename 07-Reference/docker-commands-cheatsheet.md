@@ -185,6 +185,4 @@ docker compose up --help
 
 ---
 
-<p align="center">
-  🎉 You now have a complete reference for every Docker command used in professional DevOps workflows
-</p>
+
