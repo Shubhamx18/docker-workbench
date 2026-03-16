@@ -1,4 +1,4 @@
-<h1 align="center">🧱 Docker Image Management</h1>
+<h1 align="center">Docker Image Management</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Topic-Image_Management-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
@@ -8,7 +8,7 @@
 
 ---
 
-## 📦 What is a Docker Image?
+## What is a Docker Image?
 
 A **Docker Image** is a read-only, layered template used to create containers.
 
@@ -18,11 +18,11 @@ It contains:
 - Libraries and system tools
 - Environment configuration
 
-> 🧠 **Image = Blueprint** | 🚀 **Container = Running instance of the blueprint**
+> **Image = Blueprint** | **Container = Running instance of the blueprint**
 
 ---
 
-## 🗂 Image Commands Reference
+## Image Commands Reference
 
 ```bash
 # List all images on your system
@@ -50,7 +50,7 @@ docker inspect image_name
 
 ---
 
-## 🏷 Tagging Images
+## Tagging Images
 
 Tags let you manage and version different variants of the same image.
 
@@ -68,13 +68,13 @@ docker tag my-app shubham/my-app:latest
 | `prod`, `dev` | Environment-specific variants |
 | `1.0.0` | Semantic versioning |
 
-> ⚠️ Avoid relying on `latest` in production — always use explicit version tags.
+> Avoid relying on `latest` in production — always use explicit version tags.
 
 ---
 
-## 🛠 Making Changes Inside a Running Container
+## Making Changes Inside a Running Container
 
-For testing or debugging, you can enter a container and modify it manually:
+For testing or debugging, you can enter a container and modify it manually.
 
 **Step 1:** Start an interactive container
 
@@ -96,7 +96,7 @@ exit
 
 ---
 
-## 💾 Saving a Modified Container as a New Image
+## Saving a Modified Container as a New Image
 
 After making changes inside a container, you can snapshot it as a new image:
 
@@ -104,11 +104,11 @@ After making changes inside a container, you can snapshot it as a new image:
 docker commit container_id shubham/my-ubuntu:v2
 ```
 
-> ⚠️ Use `docker commit` for testing only. For production, always define changes in a **Dockerfile** for reproducibility.
+> Use `docker commit` for testing only. For production, always define changes in a **Dockerfile** for reproducibility.
 
 ---
 
-## 🧱 Common Base Images
+## Common Base Images
 
 Docker Hub provides official, trusted base images for most use cases:
 
@@ -129,7 +129,7 @@ docker pull python:3.10-slim
 
 ---
 
-## 🧪 Interactive Mode
+## Interactive Mode
 
 Interactive mode opens a live terminal session inside a container — useful for testing and debugging.
 
@@ -147,16 +147,16 @@ docker run -it python:3.10 bash
 
 | Use Case | Reason |
 |----------|--------|
-| 🧪 Testing commands | Try things out safely inside a container |
-| 🐞 Debugging issues | Inspect files, logs, and configs manually |
-| 📦 Exploring base images | Discover what tools are pre-installed |
-| 🎓 Learning Linux | Practice commands without affecting your host |
+| Testing commands | Try things out safely inside a container |
+| Debugging issues | Inspect files, logs, and configs manually |
+| Exploring base images | Discover what tools are pre-installed |
+| Learning Linux | Practice commands without affecting your host |
 
-> ⚠️ Production containers always run in **detached mode** (`-d`). Interactive mode is for development and debugging only.
+> Production containers always run in **detached mode** (`-d`). Interactive mode is for development and debugging only.
 
 ---
 
-## ⚙️ Interactive Mode in Docker Compose
+## Interactive Mode in Docker Compose
 
 ```yaml
 version: "3.9"
@@ -181,7 +181,7 @@ docker exec -it ubuntu_shell bash
 
 ---
 
-## 🔄 Image Lifecycle
+## Image Lifecycle
 
 ```
 Pull / Build
@@ -200,17 +200,11 @@ Local Image Store
 
 ---
 
-## 🎯 Image Management in DevOps
+## Image Management in DevOps
 
 DevOps engineers regularly need to:
 
-✔ Build and version images per release
-✔ Optimize image size for faster deployments
-✔ Rebuild images when application code changes
-✔ Use trusted, minimal base images to reduce attack surface
-
----
-
-<p align="center">
-  ✅ Topic Complete — You now understand Docker image management, tagging, and interactive containers
-</p>
+- Build and version images per release
+- Optimize image size for faster deployments
+- Rebuild images when application code changes
+- Use trusted, minimal base images to reduce attack surface
