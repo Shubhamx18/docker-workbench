@@ -1,22 +1,14 @@
-<h1 align="center">⚙️ Docker Compose & YAML</h1>
+# Docker Compose & YAML
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Tool-Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
-  <img src="https://img.shields.io/badge/File-docker--compose.yml-success?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Concept-Multi_Container_Apps-orange?style=for-the-badge"/>
-</p>
+## What is Docker Compose?
 
----
-
-## ❓ What is Docker Compose?
-
-Docker Compose is a tool that lets you **define and run multi-container Docker applications** using a single declarative YAML file.
+Docker Compose is a tool that lets you define and run multi-container Docker applications using a single declarative YAML file.
 
 Instead of executing multiple `docker run` commands manually, you describe your entire application stack in one file and launch everything with a single command.
 
 ---
 
-## 🎯 Why Docker Compose is Essential
+## Why Docker Compose is Essential
 
 | Without Compose | With Compose |
 |-----------------|--------------|
@@ -28,12 +20,12 @@ Instead of executing multiple `docker run` commands manually, you describe your 
 
 ---
 
-## 📄 YAML Basics
+## YAML Basics
 
 Docker Compose uses `docker-compose.yml` written in YAML.
 
 **YAML rules:**
-- Uses **indentation** (2 spaces — never tabs)
+- Uses indentation (2 spaces — never tabs)
 - Key-value structure
 - Lists use a `-` prefix
 
@@ -47,7 +39,7 @@ tags:
 
 ---
 
-## 🧱 Full `docker-compose.yml` Structure
+## Full `docker-compose.yml` Structure
 
 ```yaml
 version: "3.9"
@@ -80,7 +72,7 @@ volumes:
 
 ---
 
-## 🐳 Example 1 — Single Container (Nginx)
+## Example 1 — Single Container (Nginx)
 
 ```yaml
 version: "3.9"
@@ -99,7 +91,7 @@ docker compose up
 
 ---
 
-## 🧩 Example 2 — Full Stack App (Python + MySQL)
+## Example 2 — Full Stack App (Python + MySQL)
 
 ```yaml
 version: "3.9"
@@ -139,7 +131,7 @@ volumes:
 
 ---
 
-## 🔍 Key Compose Fields Reference
+## Key Compose Fields Reference
 
 | Key | Purpose |
 |-----|---------|
@@ -158,7 +150,7 @@ volumes:
 
 ---
 
-## 🔁 Restart Policies
+## Restart Policies
 
 ```yaml
 restart: always          # Always restart on any exit
@@ -169,7 +161,7 @@ restart: "no"            # Never restart (default)
 
 ---
 
-## 🌍 Using `.env` with Compose
+## Using `.env` with Compose
 
 Store all secrets and configuration in a `.env` file:
 
@@ -189,17 +181,17 @@ ports:
   - "${APP_PORT}:5000"
 ```
 
-> ⚠️ Always add `.env` to `.gitignore` — never commit secrets to version control.
+> Always add `.env` to `.gitignore` — never commit secrets to version control.
 
 ---
 
-## 🔁 Docker Compose Commands
+## Docker Compose Commands
 
 | Command | Purpose |
 |---------|---------|
 | `docker compose up` | Start all services |
 | `docker compose up -d` | Start in background (detached) |
-| `docker compose down` | Stop and remove containers + networks |
+| `docker compose down` | Stop and remove containers and networks |
 | `docker compose down -v` | Also remove named volumes |
 | `docker compose build` | Build or rebuild service images |
 | `docker compose ps` | List running services |
@@ -212,15 +204,9 @@ ports:
 
 ---
 
-## 🧠 When to Use Docker Compose
+## When to Use Docker Compose
 
-✔ Running backend + database + cache together locally
-✔ Standardizing development environments across a team
-✔ Testing multi-service interactions before deployment
-✔ Powering CI/CD pipeline service dependencies
-
----
-
-<p align="center">
-  ✅ Topic Complete — You now understand Docker Compose, YAML structure, and multi-container application management
-</p>
+- Running backend, database, and cache together locally
+- Standardizing development environments across a team
+- Testing multi-service interactions before deployment
+- Powering CI/CD pipeline service dependencies
