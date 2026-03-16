@@ -1,4 +1,4 @@
-<h1 align="center">🚀 Running & Managing Containers</h1>
+<h1 align="center">Running & Managing Containers</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Topic-Container_Management-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
@@ -8,7 +8,7 @@
 
 ---
 
-## 🐳 Running a Container
+## Running a Container
 
 The `docker run` command creates and starts a container from an image:
 
@@ -20,7 +20,7 @@ If the image is not available locally, Docker automatically pulls it first.
 
 ---
 
-## 🔌 Common `docker run` Flags
+## Common `docker run` Flags
 
 | Flag | Purpose | Example |
 |------|---------|---------|
@@ -35,7 +35,7 @@ If the image is not available locally, Docker automatically pulls it first.
 
 ---
 
-## 🔌 Detached Mode
+## Detached Mode
 
 Run a container in the background so the terminal stays free:
 
@@ -45,7 +45,7 @@ docker run -d nginx
 
 ---
 
-## 🌍 Port Mapping
+## Port Mapping
 
 Expose a container's application to the host machine:
 
@@ -59,17 +59,17 @@ docker run -d -p 8080:80 nginx
 
 ---
 
-## 🏷 Naming Containers
+## Naming Containers
 
 ```bash
 docker run -d --name my-web-server nginx
 ```
 
-Named containers are much easier to reference than IDs.
+Named containers are much easier to reference than auto-generated IDs.
 
 ---
 
-## 🧪 Running Multiple Containers from Same Image
+## Running Multiple Containers from the Same Image
 
 ```bash
 docker run -d -p 8081:80 --name web1 nginx
@@ -77,11 +77,11 @@ docker run -d -p 8082:80 --name web2 nginx
 docker run -d -p 8083:80 --name web3 nginx
 ```
 
-Each runs independently with its own port.
+Each container runs independently with its own port mapping.
 
 ---
 
-## 📋 Listing Containers
+## Listing Containers
 
 ```bash
 # Show only running containers
@@ -96,7 +96,7 @@ docker ps -q
 
 ---
 
-## ⏹ Stopping & Starting
+## Stopping & Starting
 
 ```bash
 # Gracefully stop a container
@@ -112,22 +112,22 @@ docker restart container_id
 
 ---
 
-## ❌ Removing Containers
+## Removing Containers
 
 ```bash
 # Remove a stopped container
 docker rm container_id
 
-# Force remove (even if running)
+# Force remove a running container
 docker rm -f container_id
 
-# Remove all stopped containers
+# Remove all stopped containers at once
 docker container prune
 ```
 
 ---
 
-## 📜 Viewing Logs
+## Viewing Logs
 
 ```bash
 # View all logs
@@ -136,22 +136,22 @@ docker logs container_id
 # Follow logs in real-time (like tail -f)
 docker logs -f container_id
 
-# Show last 50 lines
+# Show last 50 lines only
 docker logs --tail 50 container_id
 
-# Include timestamps
+# Include timestamps in output
 docker logs --timestamps container_id
 ```
 
 ---
 
-## 💻 Executing Commands Inside a Running Container
+## Executing Commands Inside a Running Container
 
 ```bash
 # Open an interactive bash shell
 docker exec -it container_id bash
 
-# Run a single command
+# Run a single one-off command
 docker exec container_id ls /app
 
 # Run as a specific user
@@ -160,22 +160,22 @@ docker exec -u root -it container_id bash
 
 ---
 
-## 🔍 Inspecting Containers
+## Inspecting Containers
 
 ```bash
-# Full JSON details (IP, mounts, network, env vars)
+# Full JSON details — IP, mounts, network, environment variables
 docker inspect container_id
 
-# Live resource usage (CPU, memory, network I/O)
+# Live resource usage — CPU, memory, network I/O
 docker stats
 
-# Processes running inside a container
+# Processes running inside a specific container
 docker top container_id
 ```
 
 ---
 
-## 🧠 Container Lifecycle
+## Container Lifecycle
 
 ```
 docker run
@@ -195,18 +195,10 @@ docker rm
 
 ---
 
-## 🎯 Why Container Management Matters in DevOps
+## Why Container Management Matters in DevOps
 
-Mastering container management enables you to:
-
-✔ Monitor live applications and resource usage
-✔ Quickly restart failed or unresponsive containers
-✔ Debug issues by accessing container logs and shells
-✔ Scale services by running multiple container instances
-✔ Clean up stale containers to free system resources
-
----
-
-<p align="center">
-  ✅ Topic Complete — You can now fully run, monitor, and manage Docker containers
-</p>
+- Monitor live applications and track resource usage in real time
+- Quickly restart failed or unresponsive containers
+- Debug issues by accessing container logs and interactive shells
+- Scale services by running multiple independent container instances
+- Clean up stale containers to free system resources
