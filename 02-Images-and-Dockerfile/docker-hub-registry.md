@@ -1,27 +1,19 @@
-<h1 align="center">🌍 Docker Hub & Image Registry</h1>
+# Docker Hub & Image Registry
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Topic-Docker_Hub-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Concept-Image_Sharing-success?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Level-Intermediate-orange?style=for-the-badge"/>
-</p>
+## What is Docker Hub?
 
----
-
-## 🌐 What is Docker Hub?
-
-**Docker Hub** is the default cloud-based registry where Docker images are stored, versioned, and distributed.
+Docker Hub is the default cloud-based registry where Docker images are stored, versioned, and distributed.
 
 It allows you to:
 - Upload and publish your own images
 - Download thousands of official public images
 - Share images across teams and environments
 
-> Think of it as **GitHub but for Docker Images**
+> Think of it as GitHub but for Docker Images.
 
 ---
 
-## 🗄 Types of Registries
+## Types of Registries
 
 | Registry | Type | Best For |
 |----------|------|----------|
@@ -33,7 +25,7 @@ It allows you to:
 
 ---
 
-## 🏷 Image Tagging Convention
+## Image Tagging Convention
 
 Tags identify different versions or variants of an image.
 
@@ -53,7 +45,7 @@ shubham/my-app:dev
 
 ---
 
-## 🔄 Complete Push / Pull Workflow
+## Complete Push / Pull Workflow
 
 ### Step 1 — Build the Image
 
@@ -61,15 +53,11 @@ shubham/my-app:dev
 docker build -t my-app .
 ```
 
----
-
 ### Step 2 — Tag for Docker Hub
 
 ```bash
 docker tag my-app shubham/my-app:v1
 ```
-
----
 
 ### Step 3 — Login to Docker Hub
 
@@ -77,8 +65,6 @@ docker tag my-app shubham/my-app:v1
 docker login
 # Enter your Docker Hub username and password
 ```
-
----
 
 ### Step 4 — Push to Docker Hub
 
@@ -88,15 +74,11 @@ docker push shubham/my-app:v1
 
 Your image is now publicly accessible on Docker Hub.
 
----
-
 ### Step 5 — Pull on Another Machine
 
 ```bash
 docker pull shubham/my-app:v1
 ```
-
----
 
 ### Step 6 — Run the Image
 
@@ -106,18 +88,18 @@ docker run -d -p 8080:80 shubham/my-app:v1
 
 ---
 
-## 📦 Where Your Image Can Be Used After Pushing
+## Where Your Image Can Be Used After Pushing
 
 Once pushed to Docker Hub, the image is ready for:
 
-✔ Cloud servers (AWS EC2, GCP, Azure VM)
-✔ Other team members (no need to send code manually)
-✔ CI/CD pipelines (GitHub Actions, Jenkins, GitLab CI)
-✔ Kubernetes deployments
+- Cloud servers (AWS EC2, GCP, Azure VM)
+- Other team members (no need to send code manually)
+- CI/CD pipelines (GitHub Actions, Jenkins, GitLab CI)
+- Kubernetes deployments
 
 ---
 
-## 🧠 Tagging Best Practices
+## Tagging Best Practices
 
 | Practice | Why It Matters |
 |----------|----------------|
@@ -129,7 +111,7 @@ Once pushed to Docker Hub, the image is ready for:
 
 ---
 
-## 🔄 Full DevOps Workflow with Registry
+## Full DevOps Workflow with Registry
 
 ```
 Write Code
@@ -152,7 +134,7 @@ Run Container  ────────────  docker run -d -p 80:80 shub
 
 ---
 
-## 🔐 Logging Out
+## Logging Out
 
 ```bash
 docker logout
@@ -162,15 +144,9 @@ Always logout on shared machines to protect your credentials.
 
 ---
 
-## 🎯 Why Image Sharing Matters in DevOps
+## Why Image Sharing Matters in DevOps
 
-✔ Enables consistent collaboration across distributed teams
-✔ Ensures every environment uses the exact same image
-✔ Supports easy rollback by pulling any previous image version
-✔ Accelerates CI/CD pipelines with pre-built images
-
----
-
-<p align="center">
-  ✅ Topic Complete — You can now tag, push, and pull Docker images across machines and environments
-</p>
+- Enables consistent collaboration across distributed teams
+- Ensures every environment uses the exact same image
+- Supports easy rollback by pulling any previous image version
+- Accelerates CI/CD pipelines with pre-built images
