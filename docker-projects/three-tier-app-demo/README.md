@@ -1,6 +1,5 @@
-```markdown
 # Three-Tier Application
-## What This Demonstrates
+
 A Docker Compose setup that runs three containers together — Nginx, Flask, and MySQL —
 each isolated in its own container but connected through a shared internal network.
 The browser talks to Nginx, Nginx talks to Flask, and Flask talks to MySQL.
@@ -9,6 +8,7 @@ No direct database exposure. No manual networking. Just one command.
 ---
 
 ## Project Structure
+
 ```
 three-tier-app-demo/
 ├── backend/
@@ -24,6 +24,7 @@ three-tier-app-demo/
 ---
 
 ## How It Works
+
 ```
 Browser
 └── http://localhost:3000
@@ -33,18 +34,18 @@ Browser
         v
 Nginx Container (frontend)
         |
-        | Proxy / static serve
+        | serves index.html
         |
         v
 Flask Container (backend) :5000
         |
-        | pymysql
+        | pymysql connection
         |
         v
 MySQL Container (mysqldb) :3306
         |
         v
-Returns data --> Flask formats JSON --> Nginx delivers to browser
+Returns rows → Flask formats JSON → browser renders dashboard
 ```
 
 All three containers share `app-network` defined in Docker Compose.
@@ -53,216 +54,49 @@ that talks to the database.
 
 ---
 
-## The Backend
+## Backend
 
-### backend/app.py
-```python
-from flask import Flask, jsonify
-from flask_cors import CORS
-import pymysql, os, time, datetime
+**backend/Dockerfile** — builds a slim Python image, installs dependencies, and runs `app.py` on port 5000.
 
-app = Flask(__name__)
-CORS(app)
+**backend/requirements.txt** — declares four dependencies: `flask`, `flask-cors`, `pymysql`, and `cryptography`.
 
-DB_CONFIG = {
-    "host":     os.getenv("DB_HOST", "mysqldb"),
-    "user":     os.getenv("DB_USER", "root"),
-    "password": os.getenv("DB_PASSWORD", "root"),
-    "database": os.getenv("DB_NAME", "testdb"),
-    "connect_timeout": 5
-}
+**backend/app.py** — the Flask application does four things:
 
-def get_connection():
-    return pymysql.connect(**DB_CONFIG)
+- Waits for MySQL to be ready on startup, retrying every 3 seconds up to 15 times
+- Creates the `users` table if it does not exist and seeds five sample records
+- Exposes `/health` to report backend and database status
+- Exposes `/api/users` and `/api/stats` to return user records and aggregate counts
 
-def wait_for_db():
-    retries = 0
-    while retries < 15:
-        try:
-            get_connection().close()
-            print("Connected to MySQL")
-            return
-        except Exception as e:
-            retries += 1
-            print(f"Waiting for MySQL... ({retries}): {e}")
-            time.sleep(3)
-
-def init_db():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100), email VARCHAR(100),
-            role VARCHAR(50),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    cursor.execute("SELECT COUNT(*) FROM users")
-    if cursor.fetchone()[0] == 0:
-        cursor.executemany(
-            "INSERT INTO users (name, email, role) VALUES (%s, %s, %s)", [
-            ("Alice Johnson", "alice@example.com", "admin"),
-            ("Bob Smith",     "bob@example.com",   "developer"),
-            ("Carol White",   "carol@example.com", "developer"),
-            ("Dave Brown",    "dave@example.com",  "viewer"),
-            ("Eve Davis",     "eve@example.com",   "viewer"),
-        ])
-        conn.commit()
-    cursor.close()
-    conn.close()
-
-@app.route("/health")
-def health():
-    try:
-        get_connection().close()
-        db = "connected"
-    except:
-        db = "disconnected"
-    return jsonify({"status": "healthy", "database": db,
-                    "timestamp": datetime.datetime.utcnow().isoformat() + "Z"})
-
-@app.route("/api/users")
-def get_users():
-    conn = get_connection()
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute("SELECT * FROM users ORDER BY id")
-    users = cursor.fetchall()
-    for u in users:
-        if u.get("created_at"):
-            u["created_at"] = str(u["created_at"])
-    cursor.close()
-    conn.close()
-    return jsonify({"users": users, "count": len(users)})
-
-@app.route("/api/stats")
-def stats():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM users")
-    total = cursor.fetchone()[0]
-    cursor.execute("SELECT role, COUNT(*) FROM users GROUP BY role")
-    roles = {r[0]: r[1] for r in cursor.fetchall()}
-    cursor.execute("SELECT VERSION()")
-    version = cursor.fetchone()[0]
-    cursor.close()
-    conn.close()
-    return jsonify({"total_users": total, "roles": roles,
-                    "db_version": version, "db_name": DB_CONFIG["database"]})
-
-if __name__ == "__main__":
-    wait_for_db()
-    init_db()
-    app.run(host="0.0.0.0", port=5000, debug=False)
-```
-
-### backend/requirements.txt
-```text
-flask
-flask-cors
-pymysql
-cryptography
-```
-
-### backend/Dockerfile
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-RUN apt-get update && apt-get install -y curl
-
-COPY . .
-
-EXPOSE 5000
-
-CMD ["python", "app.py"]
-```
+The database host, name, user, and password are all read from environment variables
+so the same image works in any environment without rebuilding.
 
 ---
 
-## The Frontend
+## Frontend
 
-### frontend/Dockerfile
-```dockerfile
-FROM nginx:alpine
+**frontend/Dockerfile** — builds from `nginx:alpine`, drops in `index.html`, and writes
+a minimal Nginx config that serves the file on port 80 and falls back to `index.html`
+for any unknown path.
 
-RUN rm -rf /usr/share/nginx/html/*
-
-COPY index.html /usr/share/nginx/html/index.html
-
-RUN echo 'server { \
-  listen 80; \
-  root /usr/share/nginx/html; \
-  index index.html; \
-  location / { try_files $uri $uri/ /index.html; } \
-}' > /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-```
+**frontend/index.html** — a single-page dashboard that fetches from the Flask API on load,
+renders a user table, shows service health status, and logs activity in real time.
+No build step. No bundler. Pure HTML, CSS, and vanilla JavaScript.
 
 ---
 
 ## Docker Compose
-```yaml
-version: "3.8"
 
-services:
+**docker-compose.yml** wires everything together:
 
-  mysqldb:
-    image: mysql:8
-    container_name: mysqldb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: testdb
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - app-network
-
-  backend:
-    build: ./backend
-    container_name: flask-backend
-    restart: always
-    environment:
-      DB_HOST: mysqldb
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_NAME: testdb
-    ports:
-      - "5000:5000"
-    depends_on:
-      - mysqldb
-    networks:
-      - app-network
-
-  frontend:
-    build: ./frontend
-    container_name: nginx-frontend
-    restart: always
-    ports:
-      - "3000:80"
-    depends_on:
-      - backend
-    networks:
-      - app-network
-
-volumes:
-  mysql_data:
-
-networks:
-  app-network:
-    driver: bridge
-```
+- `mysqldb` — runs MySQL 8 with a named volume for persistent storage, exposed on host port 3307
+- `backend` — builds from `./backend`, receives DB credentials as environment variables, depends on `mysqldb`
+- `frontend` — builds from `./frontend`, exposed on host port 3000, depends on `backend`
+- All three services share `app-network` so they resolve each other by service name
 
 ---
 
 ## Build and Run
+
 ```bash
 # Build all images and start containers
 docker-compose up --build
@@ -276,33 +110,23 @@ docker-compose down
 
 ---
 
-## Expected Output
-```
-flask-backend  | Waiting for MySQL... (1)
-flask-backend  | Connected to MySQL
-flask-backend  | Seed data inserted
-flask-backend  | Running on http://0.0.0.0:5000
-```
-
-Visit `http://localhost:3000` in the browser. The dashboard loads,
-fetches live data from Flask, and renders the user table and service health status.
-
----
-
 ## Endpoints
+
 ```
-GET  http://localhost:5000/health      → service and database status
-GET  http://localhost:5000/api/users   → all users from MySQL
-GET  http://localhost:5000/api/stats   → totals, roles, DB version
+GET  http://localhost:3000           → dashboard UI
+GET  http://localhost:5000/health    → backend and database status
+GET  http://localhost:5000/api/users → all users from MySQL
+GET  http://localhost:5000/api/stats → totals, role breakdown, DB version
 ```
 
 ---
 
 ## Database Access
+
 ```bash
-# Open a MySQL shell inside the container
 docker exec -it mysqldb mysql -u root -p
 ```
+
 ```sql
 USE testdb;
 SELECT * FROM users;
@@ -314,12 +138,10 @@ VALUES ('Shubham Mali', 'shubham@gmail.com', 'admin');
 ---
 
 ## Key Point
-Docker Compose handles all networking automatically. Containers talk to each other
-using their service name as the hostname — Flask connects to MySQL simply by using
-`mysqldb` as the host. You do not need to:
-- hardcode IP addresses
-- expose MySQL to the host machine
-- configure any manual DNS
 
-The only port the browser ever touches is `3000`. Everything behind it stays internal.
-```
+Docker Compose handles all networking automatically. Containers resolve each other
+by service name — Flask connects to MySQL simply by using `mysqldb` as the host.
+
+You do not need to hardcode IP addresses, expose MySQL to the host, or configure
+any manual DNS. The only port the browser ever touches is `3000`.
+Everything behind it stays internal.
