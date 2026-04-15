@@ -1,4 +1,4 @@
-# Three-Tier Application
+# Three-Tier Application.
 
 A Docker Compose setup that runs three containers together — Nginx, Flask, and MySQL —
 each isolated in its own container but connected through a shared internal network.
