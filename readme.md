@@ -179,18 +179,6 @@ docker system prune    # remove unused containers, networks, dangling images
 
 <br>
 
-## Roadmap
-
-- [x] Docker fundamentals, images, containers, storage, networking
-- [x] Docker Compose
-- [x] Docker Swarm
-- [ ] Kubernetes
-- [ ] CI/CD with Jenkins or GitHub Actions
-- [ ] Infrastructure as Code with Terraform
-- [ ] Container security scanning
-
-<br>
-
 <div align="center">
 
 **Built by [Shubham](https://github.com/Shubhamx18)**
