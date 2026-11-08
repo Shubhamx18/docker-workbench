@@ -76,15 +76,53 @@ docker service rollback web
 
 ---
 
-## Missing from your notes (important ones only)
+## 6. Other Useful Commands
+
+### Check and debug
 
 ```bash
-docker service logs web                 # see output/errors of a service
-docker service inspect --pretty web     # readable details of a service
-docker service rm web                   # delete the service (cleanup)
-docker swarm leave --force              # leave the swarm (cleanup, practice only)
-docker swarm join-token worker          # command to add another machine as a worker
+docker service ls                       # all services + replica count
+docker service ps web                   # tasks of a service and their state
+docker service ps web --no-trunc        # full error messages (use when a task fails)
+docker service logs web                 # logs from all tasks of the service
+docker service logs -f web              # follow logs live
+docker service inspect --pretty web     # readable details (image, replicas, ports, update config)
 ```
+
+### Nodes
+
+```bash
+docker node ls                          # list all nodes (run on a manager)
+docker node inspect self --pretty       # details of the current node
+docker swarm join-token worker          # prints the command to add a worker machine
+docker swarm join-token manager         # prints the command to add a manager machine
+```
+
+Run the printed `docker swarm join ...` command on the other machine to add it.
+
+### Change a running service
+
+```bash
+docker service update --publish-add 9090:80 web     # add a port
+docker service update --publish-rm 9090 web         # remove a port
+docker service update --env-add KEY=value web       # add an environment variable
+```
+
+### Cleanup
+
+```bash
+docker service rm web                   # delete the service (all its tasks stop)
+docker swarm leave --force              # leave / destroy the swarm (practice only)
+```
+
+### Quick fixes
+
+| Problem | Fix |
+|---|---|
+| `could not choose an IP address to advertise` | Add `--advertise-addr <your-ip>` to `docker swarm init` |
+| Service stuck at `0/3` | `docker service ps web --no-trunc` to see the error |
+| Port already in use | Use another host port, e.g. `-p 8081:80` |
+| `This node is not a swarm manager` | Run the command on a manager node |
 
 ---
 
